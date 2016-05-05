@@ -5,15 +5,15 @@
 
 Summary: A toolkit for building modeling frameworks
 Name: %{?scl_prefix}rubygem-%{gem_name}
-Version: 4.2.5.1
-Release: 3%{?dist}
+Version: 4.2.6
+Release: 1%{?dist}
 Group: Development/Languages
 License: MIT
 URL: http://www.rubyonrails.org
 Source0: http://rubygems.org/gems/%{gem_name}-%{version}.gem
-# git clone https://github.com/rails/rails.git && cd rails/activemodel && git checkout v4.2.5.1
-# tar czvf activemodel-4.2.5.1-tests.tgz test/
-Source1: %{gem_name}-4.2.5.1-tests.tgz
+# git clone https://github.com/rails/rails.git && cd rails/activemodel && git checkout v4.2.6
+# tar czvf activemodel-4.2.6-tests.tgz test/
+Source1: %{gem_name}-%{version}-tests.tgz
 
 # Let's keep Requires and BuildRequires sorted alphabeticaly
 Requires: %{?scl_prefix_ruby}ruby(rubygems)
@@ -90,6 +90,9 @@ popd
 %doc %{gem_docdir}
 
 %changelog
+* Mon Apr 04 2016 Pavel Valena <pvalena@redhat.com> - 4.2.6-1
+- Update to 4.2.6
+
 * Wed Feb 17 2016 Pavel Valena <pvalena@redhat.com> - 4.2.5.1-3
 - Update to 4.2.5.1
 
