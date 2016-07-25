@@ -8,7 +8,7 @@
 Summary: A toolkit for building modeling frameworks
 Name: %{?scl_prefix}rubygem-%{gem_name}
 Version: 4.1.5
-Release: 1%{?dist}
+Release: 2%{?dist}
 Group: Development/Languages
 License: MIT
 URL: http://www.rubyonrails.org
@@ -17,6 +17,11 @@ Source0: http://rubygems.org/gems/%{gem_name}-%{version}.gem
 # tar czvf activemodel-4.1.5-tests.tgz test/
 Source1: %{gem_name}-%{version}-tests.tgz
 # Let's keep Requires and BuildRequires sorted alphabeticaly
+
+# Fix CVE-2016-0753 Possible Input Validation Circumvention
+# https://bugzilla.redhat.com/show_bug.cgi?id=1301973
+Patch0: rubygem-activemodel-4.1.14.1-CVE-2016-0753-fix-possible-input-validation-circumvention.patch
+
 Requires: %{?scl_prefix_ruby}ruby(release)
 Requires: %{?scl_prefix_ruby}ruby(rubygems)
 Requires: %{?scl_prefix}rubygem(activesupport) = %{version}
@@ -48,12 +53,20 @@ Requires:%{?scl_prefix}%{pkg_name} = %{version}-%{release}
 Documentation for %{pkg_name}
 
 %prep
-%setup -q -c -T
 %{?scl:scl enable %{scl} - << \EOF}
-%gem_install -n %{SOURCE0}
+gem unpack %{SOURCE0}
+%setup -q -D -T -n  %{gem_name}-%{version}
+
+gem spec %{SOURCE0} -l --ruby > %{gem_name}.gemspec
+
+%patch0 -p2
 %{?scl:EOF}
 
 %build
+%{?scl:scl enable %{scl} - << \EOF}
+gem build %{gem_name}.gemspec
+%gem_install
+%{?scl:EOF}
 
 %install
 mkdir -p %{buildroot}%{gem_dir}
@@ -94,6 +107,10 @@ rm -rf %{testdir}
 %doc %{gem_docdir}
 
 %changelog
+* Wed Feb 10 2016 Pavel Valena <pvalena@redhat.com> - 4.1.5-2
+- Fix possible input validation circumvention - rhbz#1301973
+  - Resolves: CVE-2016-0753
+
 * Tue Jan 20 2015 Josef Stribny <jstribny@redhat.com> - 4.1.5-1
 - Update to 4.1.5
 
